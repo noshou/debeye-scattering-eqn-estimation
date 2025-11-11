@@ -1,6 +1,6 @@
 open F_0 
 open F1_f2_lookup
-open Complex 
+exception Invalid_element of string
 
 (** form_fact(q, elm) = f0(q, elm) + f1(elm) + i*f2(elm) *)
 let form_fact (q : float) (elm : string) : Complex.t = 

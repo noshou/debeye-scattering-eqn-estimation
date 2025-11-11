@@ -1,3 +1,8 @@
+
+
+(* load df *)
+let df = Owl_dataframe.of_csv ~sep:',' "f0.csv"
+
 (** gets f0 given a Q value, where:
 f_0(Q) = ∑a_i*e^(-b_i * (Q)^2) + c,
 where i ∈ [1, 4]; 0<(sinθ)/λ<2.0 Å⁻¹.
@@ -5,10 +10,6 @@ Source: 10.1107/97809553602060000600. For the sake of simplifying stuff,
 we will only go from 0 -> .50 Å⁻¹ in increments of 0.02. The wizards at the source provided
 have already gracefully done all calculations for f0!
 *)
-
-(* load df *)
-let df = Owl_dataframe.of_csv ~sep:',' "f0.csv"
-
 let get_f0 (q : float) (elm : string) : float = 
 
     (* round q to nearest hundredth *)
