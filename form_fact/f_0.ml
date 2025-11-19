@@ -1,5 +1,53 @@
-(* load hashtable *)
-let df = Owl_dataframe.of_csv ~sep:',' "data/regular_scattering_factor/f0.csv"
+
+(*csv file is a list of nested string lists such that.:
+[[headers]; [row_1 values (string)];  ... [row_n values]]
+
+We want to make a hash map such that:
+Q value -> list of f0 values
+f0[elm] -> element's specific f0 value*)
+let tbl = Hashtbl.create 100
+let () = 
+    (Csv.load "data/regular_scattering_factor/f0.csv")
+    |> List.iteri (
+
+        (* iterate through rows; first row are headers so skip it*)
+        fun idx row -> 
+            if idx <> 0 then begin 
+                
+            (*  first value is Q idx *)
+            let q =  List.hd row in 
+
+            (* values f[1:] are form factor values at Q values; *)
+            let f = List.tl row  in 
+
+            (* Add to hashtable *)
+            Hashtbl.add tbl q f
+        end 
+    )
+
+(* each element matches to unique key *)
+let idx s = match (String.lowercase_ascii s) with
+  | "h"  -> 0
+  | "he" -> 1
+  | "li" -> 2
+  | "be" -> 3
+  | "b"  -> 4
+  | "c"  -> 5
+  | "n"  -> 6
+  | "o"  -> 7
+  | "f"  -> 8
+  | "ne" -> 9
+  | "na" -> 10
+  | "mg" -> 11
+  | "al" -> 12
+  | "si" -> 13
+  | "p"  -> 14
+  | "s"  -> 15
+  | "cl" -> 16
+  | "ar" -> 17
+  | "k"  -> 18
+  | "ca" -> 19
+  | _ -> failwith ("Invalid element: " ^ s)
 
 (** gets f0 given a Q value, where:
 f_0(Q) = ∑a_i*e^(-b_i * (Q)^2) + c,
@@ -21,34 +69,10 @@ let get_f0 (q : float) (elm : string) : float =
     if (int_of_float (Float.round (q *. 100.)) mod 2) <> 0 then 
         raise (Invalid_argument "Q must be in increments of 0.02!") ;
 
-    (* q = 0.02 * row# -> row# = floor (q/0.02) *)
-    let row = int_of_float (floor (q /. 0.02)) in
 
-    (* check if elm is in *)
-    let col =
-      match elm with
-      | "h"  -> 1
-      | "he" -> 2
-      | "li" -> 3
-      | "be" -> 4
-      | "b"  -> 5
-      | "c"  -> 6
-      | "n"  -> 7
-      | "o"  -> 8
-      | "f"  -> 9
-      | "ne" -> 10
-      | "na" -> 11
-      | "mg" -> 12
-      | "al" -> 13
-      | "si" -> 14
-      | "p"  -> 15
-      | "s"  -> 16
-      | "cl" -> 17
-      | "ar" -> 18
-      | "k"  -> 19
-      | "ca" -> 20
-      | _ -> failwith ("Unknown element: " ^ elm)
-    in 
+    (* load possible values of f0 for given q *)
+    let f0_vals = Hashtbl.find tbl (string_of_float q) in
 
-    (* fetch value at df[row;col] *)
-    Owl_dataframe.unpack_float (Owl_dataframe.get df row col)
+    (* find + return f0 value *)
+    float_of_string (List.nth f0_vals (idx elm))
+
