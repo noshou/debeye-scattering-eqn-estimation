@@ -6,16 +6,16 @@ exception Malformed_xyzFile of string
 where the first two lines are non-data info/comments *)
 
 (* matches beginning of file *)
-let re1 a= Str.regexp "^[ \t]*"
+let re1 = "^[ \t]*"
 
 (* matches some name string *)
-let re2 = Str.regexp "\\([A-Za-z]+\\)"
+let re2 = "\\([A-Za-z]+\\)"
 
 (* matches some coordinate value *)
-let re3 = Str.regexp "\\(-?[0-9]+\\(\\.[0-9]+\\)?\\)"
+let re3 = "\\(-?[0-9]+\\(\\.[0-9]+\\)?\\)"
 
 (* matches end of regex *)
-let re4 = Str.regexp "[ \t]*$"
+let re4 = "[ \t]*$"
 
 (* matches tab delim files (tsv) *)
 let re_tsv = 
@@ -41,31 +41,34 @@ let load_xyz fp =
     let row = input_line f in 
 
     (* detect delim type*)
-    let _delimType = 
-        if (Str.string_match re_tsv row 0) then 
+    let _delimType =
+        if Str.string_match re_tsv row 0 then
             re_tsv
-        else if (Str.string_match re_csv row 0) then 
-            re_csv 
-        else 
+        else if Str.string_match re_csv row 0 then
+            re_csv
+        else
             raise (Malformed_xyzFile "xyz file must be csv or tsv!")
     in
 
     (* error message *)
-    let errmsg m = match _delimType with
-        | re_tsv -> "Expected tsv; got:" ^ m
-        | re_csv -> "Expected csv; got:" ^ m
-    in 
-
+    let errmsg m =
+        if _delimType == re_tsv then
+            "Expected tsv; got: " ^ m
+        else if _delimType == re_csv then
+            "Expected csv; got: " ^ m
+        else
+            "Unknown delimiter; got: " ^ m
+    in
     (* parse data from first row *)
     let n = Str.matched_group 1 row in 
-    let p = 
+    let p : Atom_.coord = 
         {   x = float_of_string (Str.matched_group 2 row);
             y = float_of_string (Str.matched_group 3 row);
             z = float_of_string (Str.matched_group 4 row);
         }
     in 
 
-    atoms := (Atom.create n p) :: !atoms;
+    atoms := (Atom_.create_atom p n) :: !atoms;
 
     (* parse rest of file *)
     try 
@@ -73,15 +76,15 @@ let load_xyz fp =
             let row = input_line f in 
             if (Str.string_match _delimType row 0) then 
                 let n = Str.matched_group 1 row in 
-                let p = 
+                let p : Atom_.coord = 
                     {   x = float_of_string (Str.matched_group 2 row);
                         y = float_of_string (Str.matched_group 3 row);
                         z = float_of_string (Str.matched_group 4 row);
                     }
                 in 
-                atoms := (Atom.create n p) :: !atoms;
+                atoms := (Atom_.create_atom p n) :: !atoms;
             else 
-                raise (Malformed_xyzEntry row)
+                raise (Malformed_xyzEntry (errmsg row))
         done;
         !atoms; (* never reached (since end of file always hit) but needed for type *)
     with 
