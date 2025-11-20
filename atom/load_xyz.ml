@@ -1,32 +1,35 @@
 exception Malformed_xyzEntry of string
 exception Malformed_xyzFile of string
 
-(* each data in xyz file is tabulated as 
-|element | x-coord | y-coord| z-coord| 
-where the first two lines are non-data info/comments *)
 
+(* below does not work :( *) 
+
+(*
 (* matches beginning of file *)
 let re1 = "^[ \t]*"
 
 (* matches some name string *)
 let re2 = "\\([A-Za-z]+\\)"
 
-(* matches some coordinate value *)
-let re3 = "\\(-?[0-9]+\\(\\.[0-9]+\\)?\\)"
+(* matches a coordinate value (integer or decimal, possibly negative) *)
+let re3 = "\\(-?[0-9]+\\(?:\\.[0-9]+\\)?\\)"
 
-(* matches end of regex *)
+(* matches end of line *)
 let re4 = "[ \t]*$"
 
-(* matches tab delim files (tsv) *)
+(* matches tab/space-delimited files (TSV) *)
 let re_tsv = 
-    Str.regexp (re1 ^ re2 ^ "[\t]" ^ re3  ^ "[\t]" ^ re3  ^ "[\t]" ^ re3  ^ re4)
+  Str.regexp (re1 ^ re2 ^ "[ \t]+" ^ re3 ^ "[ \t]+" ^ re3 ^ "[ \t]+" ^ re3 ^ re4)
 
-(* matches comma delim files (csv) *)
+(* matches comma-delimited files (CSV) *)
 let re_csv = 
-    Str.regexp (re1 ^ re2 ^ "[ \t]*,[ \t]*" ^ re3  ^ "[ \t]*,[ \t]*" ^ re3  ^ "[ \t]*,[ \t]*" ^ re3  ^ re4)
+  Str.regexp (re1 ^ re2 ^ "[ \t]*,[ \t]*" ^ re3 ^ "[ \t]*,[ \t]*" ^ re3 ^ "[ \t]*,[ \t]*" ^ re3 ^ re4) *)
 
 (** loads an xyz file (tsv or csv) from a file path.
-Note: the list is returned backwards w.r.t how the file was read *)
+Note: the list is returned backwards w.r.t how the file was read 
+*)
+
+
 let load_xyz fp =
 
     (* initialize mutable empty list of atoms *)
@@ -39,13 +42,13 @@ let load_xyz fp =
 
     (* first row parsing *)
     let row = input_line f in 
-
+    print_endline row;
     (* detect delim type*)
     let _delimType =
         if Str.string_match re_tsv row 0 then
             re_tsv
-        else if Str.string_match re_csv row 0 then
-            re_csv
+        (* else if Str.string_match re_csv row 0 then
+            re_csv *)
         else
             raise (Malformed_xyzFile "xyz file must be csv or tsv!")
     in
@@ -54,8 +57,8 @@ let load_xyz fp =
     let errmsg m =
         if _delimType == re_tsv then
             "Expected tsv; got: " ^ m
-        else if _delimType == re_csv then
-            "Expected csv; got: " ^ m
+        (* else if _delimType == re_csv then
+            "Expected csv; got: " ^ m *)
         else
             "Unknown delimiter; got: " ^ m
     in
