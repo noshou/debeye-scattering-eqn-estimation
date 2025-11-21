@@ -8,4 +8,5 @@ let create = Atom_.create_atom
 let xyz = Atom_.xyz 
 let name = Atom_.name
 let form_factor = Atom_.form_fact 
+let to_string = Atom_.to_string
 let load_xyz = Load_xyz.load_xyz

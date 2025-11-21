@@ -20,6 +20,10 @@ val name : atom -> string
 (** gets the form factor of an atom at a given q *)
 val form_factor : atom -> float -> Complex.t
 
+(** returns a string representation of the atom.
+Optional q value (default set to 0)*)
+val to_string : atom -> ?q:float -> unit -> string 
+
 (** loads an xyz file (tsv or csv) from a file path.
 Note: the list is returned backwards w.r.t how the file was read *)
 val load_xyz : string -> atom list

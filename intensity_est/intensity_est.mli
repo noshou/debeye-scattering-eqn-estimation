@@ -22,5 +22,6 @@ in the xyz file.
 @param xyz_file  Path to the input XYZ file containing atomic coordinates.  
 @param tol optional precision; default is [1e-10]
 @param run optional stem of csv file; default is ["classic"] (WILL OVERWRITE EXISTING FILES!)
-@param clk optional output of timing as [<run>_timing.txt]; default is [false] (WILL OVERWRITE EXISTING FILES!)*)
-val classic : string -> ?tol:float -> ?run:string -> ?clk:bool -> unit -> unit
+@param clk optional output of timing as [<run>_timing.txt]; default is [false] (WILL OVERWRITE EXISTING FILES!)
+@return the time it took to run (nanoseconds)*)
+val classic : string -> ?tol:float -> ?run:string -> ?clk:bool -> unit -> Int64.t
