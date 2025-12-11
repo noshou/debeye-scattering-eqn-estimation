@@ -82,14 +82,14 @@ let load_xyz fp =
 
 			if (Str.string_match _delimType row 0) then 
 			begin
-                let n = Str.matched_group 1 row in 
-                let p : Atom_.coord = 
-                    {   x = float_of_string (Str.matched_group 2 row);
-                        y = float_of_string (Str.matched_group 3 row);
-                        z = float_of_string (Str.matched_group 4 row)
-                    }
-                in 
-                atoms := (Atom_.create_atom p n) :: !atoms;
+        let n = Str.matched_group 1 row in 
+        let p : Atom_.coord = 
+            {   x = float_of_string (Str.matched_group 2 row);
+                y = float_of_string (Str.matched_group 3 row);
+                z = float_of_string (Str.matched_group 4 row)
+            }
+        in 
+        atoms := (Atom_.create_atom p n) :: !atoms;
 			end 
             else 
                 raise (Malformed_xyzEntry (errmsg row))

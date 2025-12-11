@@ -1,0 +1,13 @@
+name = "Debeye Scattering Estimation"
+version = "0.1.0"
+license = "MIT"
+author = "noshou"
+maintainer = "noshou"
+
+[build]
+auto-executables = true
+auto-tests = true
+
+[dependencies]
+csv-fortran = { git="https://github.com/jacobwilliams/csv-fortran.git" }
+stdlib = { git = "https://github.com/fortran-lang/stdlib", branch = "stdlib-fpm" }

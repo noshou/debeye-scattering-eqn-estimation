@@ -1,0 +1,23 @@
+name = "debeye_scattering_estimation"
+version = "0.1.0"
+license = "GPL-3"
+author = "noshou"
+maintainer = "nas779@usask.ca"
+copyright = "Copyright 2025, nas779"
+
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+module-naming = false
+[install]
+library = false
+
+[fortran]
+implicit-typing = false
+implicit-external = false
+source-form = "free"
+
+[dependencies]
+csv-fortran = { git="https://github.com/jacobwilliams/csv-fortran.git" }
+stdlib = { git = "https://github.com/fortran-lang/stdlib", branch = "stdlib-fpm" }
