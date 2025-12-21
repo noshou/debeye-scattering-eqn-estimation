@@ -4,7 +4,7 @@ module atom_mod
     implicit none
 
     private
-
+    
     ! Public types
     public :: coord, atom, create_atom
     
