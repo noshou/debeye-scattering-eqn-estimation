@@ -1,8 +1,8 @@
 module calc_mod
-    
-    use atom_mod
-    use iso_c_binding
+    use, intrinsic :: ieee_arithmetic
+    use, intrinsic :: iso_c_binding
     use kdt_mod
+    use atom_mod
     
     implicit none 
     private 
