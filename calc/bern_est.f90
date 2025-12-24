@@ -11,8 +11,9 @@
 !! @param[out] err Optional error flag: 1 if threshold not found, 
 !!                 0 if threshold found successfully
 !!
-!! @return thresh Complex threshold value, or NaN+NaN*i if no valid threshold exists
-function bern_est(w, f, e, l, n, err) result(thresh)
+!! @return bernoulli estimator:
+!          thresh is Complex threshold value, or NaN+NaN*i if no valid threshold exists
+function bern_est(w, f, e, l, n, err) result(bern)
     use, intrinsic :: ieee_arithmetic
     use, intrinsic :: iso_c_binding
     implicit none
@@ -50,7 +51,7 @@ function bern_est(w, f, e, l, n, err) result(thresh)
         ! calculate cumulative frequency distribution
         ! P(|w| >= mag) = sum of frequencies where |w_j| >= mag
         do j = 1, size(w)
-            if (abs(w(j)) >= mag) p_curr = p_curr + real(f(j),kind=c_double)/real(n,kind=c_double)
+        if (abs(w(j))>=mag) p_curr=p_curr+real(f(j),kind=c_double)/real(n,kind=c_double)
         end do 
 
         ! check if cumulative probability <= e/3
@@ -60,10 +61,8 @@ function bern_est(w, f, e, l, n, err) result(thresh)
                 thresh = t_curr
                 found_ = .true. 
             else 
-                if (l) then 
-                    if (mag < abs(thresh)) thresh = t_curr 
-                else 
-                    if (mag > abs(thresh)) thresh = t_curr
+                if (l) then; if (mag < abs(thresh)) thresh = t_curr 
+                else;        if (mag > abs(thresh)) thresh = t_curr
                 end if 
             end if 
         end if 
@@ -75,4 +74,10 @@ function bern_est(w, f, e, l, n, err) result(thresh)
     else 
         if (present(err)) err = 0
     end if
+
+    ! create new bernoulli estimator
+    type(bernoulli) :: bern
+    bern%thresh = thresh
+    bern%probab = p_curr
+
 end function bern_est

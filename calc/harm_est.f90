@@ -5,7 +5,7 @@
 !! @param[in] c      Rounding flag: .true. for ceiling, .false. for floor (logical)
 !!
 !! @return w_est     Estimated form factor weight (W/n)
-function harm_est(w, f, a, e, c) result(w_est)
+pure function harm_est(w, f, a, e, c) result(w_est)
     
     ! Input parameters
     complex(c_double), dimension(:), intent(in) :: w !< Array of weights

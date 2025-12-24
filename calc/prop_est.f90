@@ -13,7 +13,7 @@
 !! @param[in] c      Rounding flag: .true. for ceiling, .false. for floor (logical)
 !!
 !! @return w_est     Estimated form factor weight (W)
-function prop_est(w, f, a, e, c) result(w_est)
+pure function prop_est(w, f, a, e, c) result(w_est)
     
     ! Input parameters
     complex(c_double), dimension(:), intent(in) :: w !< Array of weights
@@ -103,4 +103,4 @@ function prop_est(w, f, a, e, c) result(w_est)
     ! Calculate estimated weight: w_est = C(s,2) / sum
     w_est = s_choose_2 / sum
     
-end function propest
+end function prop_est

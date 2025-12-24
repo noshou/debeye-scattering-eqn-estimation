@@ -16,6 +16,12 @@ module calc_mod
         type(c_ptr)     :: name       
     end type intensity
 
+    ! bernoulli estimator type
+    type :: bernoulli
+        complex(c_double) :: thresh
+        real(c_double)    :: probab
+    end type bernoulli
+
     contains 
 
         ! helper functions
