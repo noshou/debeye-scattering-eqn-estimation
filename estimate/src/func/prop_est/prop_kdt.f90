@@ -1,14 +1,19 @@
+!! Performs radius-based searches in the k-d tree for each provided Q value
+!! and computes intensity estimates. Returns both the computation time and
+!! the resulting intensity data as a function of Q.
 !!
-!! @param k         kdt tree
-!! @param r         radius to search within
-!! @param q_vals    Q values to calculate I(Q); NOTE: assumed to be in valid range!
-!! @param n_q       Number of q values
-!! @param[in] a      Advice parameter, should be >= number of nodes 
-!! @param[in] e      Epsilon parameter, must satisfy 0 < epsilon < 1 
-!! @param[in] c      Rounding flag: .true. for ceiling, .false. for floor (logical)
-!! @param name      Name of dataset
-!! @return          The time it took to run (nanoseconds) and
-!!                  array of q vs I_real (intensity_estimate type)
+!! @param[in] k         K-d tree structure containing the data
+!! @param[in] r         Search radius for nearest neighbor queries
+!! @param[in] q_vals    Array of Q values to calculate I(Q) at (must be in valid range)
+!! @param[in] n_q       Number of Q values in the q_vals array
+!! @param[in] a         Advice parameter for estimation (should be >= number of nodes)
+!! @param[in] e         Epsilon parameter for accuracy control (must satisfy 0 < e < 1)
+!! @param[in] c         Rounding mode flag: .true. for ceiling, .false. for floor
+!! @param[in] name      Dataset identifier/name for logging or output
+!!
+!! @return              Returns a tuple containing:
+!!                      - Execution time in nanoseconds (integer)
+!!                      - Array of intensity_estimate type with Q vs I_real values
 function prop_kdt(k, r, q_vals, n_q, a, e, c, name) result(intensity_estimate)
     type(kdt), intent(in) :: k
     real(c_double), intent(in) :: r
