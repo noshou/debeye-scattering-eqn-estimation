@@ -3,7 +3,7 @@
 !! using atomic form factors and pairwise distance contributions via the sinc function.
 !!
 !! The algorithm performs the following steps for each Q value:
-!! 1. Estimates proportional weights using the prop_est function
+!! 1. Estimates proportional weights using the propEst function
 !! 2. Computes pairwise contributions: f_i * w_est * sinc(Q * r_ij) for all atom pairs
 !! 3. Adds self-contribution: f_i * conj(f_i) for each atom
 !! 4. Normalizes the total intensity by N^2 where N is the number of atoms
@@ -70,7 +70,7 @@ function prop_radial(k, q_vals, a, e, c, name) result(intensity_estimate)
         q_val = q_vals(q_ij)
         
         ! get estimate of weight
-        w_est = prop_est(k, q_val, a, e, c)
+        w_est = propEst(k, q_val, a, e, c)
         est = 0
         
         do i = 1, n_atoms

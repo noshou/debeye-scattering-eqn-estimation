@@ -25,7 +25,7 @@
 !!
 !! @return          The time it took to run (nanoseconds) and
 !!                  array of q vs I_real (intensity_estimate type)
-function debeye_kdt(k, r, q_vals, name) result(intensity_estimate)
+function debeyeEst_kdt(k, r, q_vals, name) result(intensity_estimate)
     type(kdt), intent(in) :: k
     real(c_double), intent(in) :: r
     character(len=*), intent(in) :: name
@@ -107,4 +107,4 @@ function debeye_kdt(k, r, q_vals, name) result(intensity_estimate)
     ! Clean up
     deallocate(atoms, intensity)                            
     
-end function debeye_kdt
+end function debeyeEst_kdt

@@ -13,15 +13,15 @@ module estimate_mod
         type(c_ptr)     :: i_vals     
         integer(c_int)  :: timing
         integer(c_int)  :: size  
-        type(c_ptr)     :: name       
+        type(c_ptr)     :: name ! IS NOT NULL TERMINATED     
     end type estimate
 
     contains 
         include "func/new_intensity.f90"
-        include "func/prop_est/prop_est.f90"
+        include "func/propEst/propEst.f90"
         include "func/sinc.f90"
-        include "func/debeye/debeye_radial.f90"
-        include "func/debeye/debeye_kdt.f90"
-        include "func/prop_est/prop_radial.f90"
-        include "func/prop_est/prop_kdt.f90"
+        include "func/debeyeEst/debeyeEst_radial.f90"
+        include "func/debeyeEst/debeyeEst_kdt.f90"
+        include "func/propEst/propEst_radial.f90"
+        include "func/propEst/propEst_kdt.f90"
 end module estimate_mod

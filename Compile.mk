@@ -52,7 +52,7 @@ AXY_MOD_DIR  = $(AXY_BLD_DIR)/mod
 AXY_LIB_DIR  = $(AXY_BLD_DIR)/lib
 AXY_DATA_DIR = $(AXY_DIR)/data
 AXY_TMP_DIR  = $(AXY_SRC_DIR)/xyz_tmp
-AXY_PARSE_DIR=$(AXY_DIR)/xyz_parse
+AXY_PARSE_DIR=$(AXY_DIR)/parsers
 
 # Source files
 AXY_ATM_SRC  = $(AXY_SRC_DIR)/atom.f90
@@ -64,9 +64,10 @@ AXY_XYZ_OBJ  = $(patsubst $(AXY_DATA_DIR)/%.xyz,$(AXY_BLD_DIR)/xyz_%.o,$(wildcar
 # Library
 AXY_LIB      = $(AXY_LIB_DIR)/atom_xyz.a
 
-# Available atom modules
+# Available atom modules/includes
 AXY_LST 	 = $(AXY_BLD_DIR)/xyz_modules.txt
-
+AXY_USE 	 = $(AXY_BLD_DIR)/mod_uses.txt
+AXY_SWT 	 = $(AXY_BLD_DIR)/mod_switches.txt
 # ============================================================================
 # KDT LIBRARY CONFIGURATION
 # ============================================================================
@@ -122,7 +123,8 @@ PDB_EXE 	 = $(PDB_EXE_DIR)/pdb_to_xyz
         check-deps-yojson check-deps-str help clean-formfacts \
 		clean-objects build-dirs-atom_xyz parse-xyz tabulate-xyz \
 		postamble kdt build-dirs-kdt clean-kdt compile-pdb-2-xyz clean-pdb-2-xyz \
-		build-dirs-pdb-2-xyz build-dirs-estimate clean-estimate estimate
+		build-dirs-pdb-2-xyz build-dirs-estimate clean-estimate estimate \
+		generate-xyz-includes
 
 # ============================================================================
 # MAIN TARGETS
@@ -216,7 +218,7 @@ $(FF_F12_SRC): | check-deps-yojson
 # The files that are produced are HUGE so use sparingly. 
 # All files in the xyz folder are automatically deleted after compilation.
 # ============================================================================
-atom_xyz: clean-atom_xyz build-dirs-atom_xyz parse-xyz tabulate-xyz $(AXY_LIB)   
+atom_xyz: clean-atom_xyz build-dirs-atom_xyz parse-xyz tabulate-xyz generate-xyz-includes $(AXY_LIB)   
 
 # make build dir
 build-dirs-atom_xyz:
@@ -239,6 +241,14 @@ tabulate-xyz:
 	@for f in $(AXY_DATA_DIR)/*.xyz; do \
 		echo "xyz_$$(basename "$$f" .xyz)_mod.mod"; \
 	done > $(AXY_LST)
+
+# generates files needed for include in main.f90
+generate-xyz-includes:
+	@$(OC) $(AXY_PARSE_DIR)/mod_parser.ml -o mod_parser
+	@./mod_parser $(AXY_LST)
+	@rm -rf mod_parser $(AXY_PARSE_DIR)/*.cmi $(AXY_PARSE_DIR)/*.cmx $(AXY_PARSE_DIR)/*.o
+	@mv $(AXY_PARSE_DIR)/mod_uses.txt $(AXY_USE)
+	@mv $(AXY_PARSE_DIR)/mod_switches.txt $(AXY_SWT)
 
 # compile files
 $(AXY_ATM_OBJ): $(AXY_ATM_SRC) | $(AXY_BLD_DIR) $(AXY_MOD_DIR) $(FF_MOD_DIR)

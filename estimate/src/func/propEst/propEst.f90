@@ -22,7 +22,7 @@
 !! @param[in] c      Ceiling flag: if .true. use ceiling, if .false. use floor
 !!
 !! @return w_est    Complex conjugate of the estimated propagator weight
-function prop_est(k, q, a, e, c) result(w_est)
+function propEst(k, q, a, e, c) result(w_est)
     
     ! Input parameters
     type(kdt), intent(in) :: k
@@ -119,4 +119,4 @@ function prop_est(k, q, a, e, c) result(w_est)
     w_est = s_choose_2 / sum
     w_est = conjg(w_est)
 
-end function prop_est
+end function propEst

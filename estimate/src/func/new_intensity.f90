@@ -35,7 +35,7 @@ function new_intensity(t, q, i, n) result(e)
     allocate(i_cpy(size(i)))
     q_cpy = q  
     i_cpy = i  
-    n_cpy = trim(n) // c_null_char
+    n_cpy = trim(n)
     
     ! build output 
     e%q_vals = c_loc(q_cpy)
