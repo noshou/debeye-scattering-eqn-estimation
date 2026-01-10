@@ -5,7 +5,7 @@ module main_mod
     use form_fact_mod; use csv_interface_mod
     
     ! generated atom modules "use"
-    include "_build/inc/mod_uses.inc"
+    include "mod_uses.inc"
 
     implicit none
     private
@@ -62,7 +62,7 @@ contains
             name = trim(buff(s+1:len_trim(buff) - end_pos))
             
             ! add switch cases here - defines which atom module to use
-            include "_build/inc/mod_switches.inc"
+            include "mod_switches.inc"
             atms = size(atoms)
 
             ! build KD-tree

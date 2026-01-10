@@ -60,10 +60,6 @@ $RECYCLE.BIN/
 *.orig
 *.rej
 
-# VSCode
-.vscode/*
-*.vsix
-
 # various OCaml intermediates
 *.annot
 *.cmo
@@ -153,4 +149,8 @@ po/*~
 rsconnect/
 
 # Vscode
+*.vsix
 .vscode/
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
